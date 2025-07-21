@@ -1,6 +1,8 @@
 #include "dispatcher.h"
 #include "stdlib.h"
 
+#include <stdio.h>
+
 #define DISPATCHER_NULL (void*)0
 
 void dispatcher_init(dispatcher* dispatcher) {
@@ -31,4 +33,20 @@ void dispatcher_create_layer(dispatcher* dispatcher, dispatcher_init_func init_f
     current_layer->next_layer->function_array = calloc(1, sizeof(dispatcher->function_array_size));
     current_layer->next_layer->next_layer = DISPATCHER_NULL;
     init_func(current_layer->next_layer);
+}
+
+void dispatcher_destroy(dispatcher* dispatcher) {
+    if (dispatcher->first_layer == NULL) { return; }
+
+    dispatcher_layer* current_layer = dispatcher->first_layer, *lastLayer = DISPATCHER_NULL;
+    while (current_layer->next_layer != DISPATCHER_NULL) {
+        lastLayer = current_layer;
+        current_layer = current_layer->next_layer;
+    }
+
+    current_layer->userData = DISPATCHER_NULL;
+    free(current_layer->function_array);
+    if (lastLayer != NULL) free(lastLayer->next_layer);
+    lastLayer->next_layer = NULL;
+    dispatcher_destroy(dispatcher);
 }

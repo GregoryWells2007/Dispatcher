@@ -15,3 +15,4 @@ typedef dispatcher_bool (*dispatcher_init_func)(dispatcher_layer* layer);
 void dispatcher_init(dispatcher* dispatcher);
 void dispatcher_set_function_array_size(dispatcher* dispatcher, dispatcher_size size);
 void dispatcher_create_layer(dispatcher* dispatcher, dispatcher_init_func init_func, void* userData);
+void dispatcher_destroy(dispatcher* dispatcher);
